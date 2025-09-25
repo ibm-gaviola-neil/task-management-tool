@@ -40,7 +40,6 @@
 <template>
     <NuxtLayout>
         <div
-            v-if="!taskStore.isLoading"
             :class="[
             'w-full h-[calc(100vh-100px)] px-40',
             filteredTasks?.length > 0 
