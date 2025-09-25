@@ -39,8 +39,7 @@
             <FormFieldsInput
               v-model="email"
               label="Email"
-              placeholder="Your password"
-              type="email"
+              placeholder="Enter your email"
               :error="auth.errors?.email?.[0]"
             />
           </div>
@@ -48,7 +47,7 @@
               <FormFieldsInput
                 v-model="password"
                 label="Password"
-                placeholder="Your password"
+                placeholder="Enter your password"
                 type="password"
                 :error="auth.errors?.password?.[0]"
               />
