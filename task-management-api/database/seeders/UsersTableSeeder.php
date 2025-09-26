@@ -19,12 +19,21 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('tasks')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        DB::table('users')->insert([
+        DB::table('users')->insert(
+            [
             'name' => Str::random(10),
             'email' => Str::random(10).'@example.com',
             'password' => Hash::make('password'),
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
+            ],
+            [
+                'name' => Str::random(10),
+                'email' => Str::random(10).'@example.com',
+                'password' => Hash::make('password'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
 }

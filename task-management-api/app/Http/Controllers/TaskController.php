@@ -54,6 +54,7 @@ class TaskController extends Controller
      */
     public function update(Task $task)
     {
+        $this->authorize('update', $task);
         $response = $this->taskService->updateTask($task);
         return (new ApiResponseResource($response))
             ->response()
@@ -65,6 +66,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        $this->authorize('viewAny', $task);
         $response = $this->taskService->deleteTask($task);
         return (new ApiResponseResource($response))
             ->response()

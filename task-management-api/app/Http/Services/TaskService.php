@@ -22,8 +22,8 @@ class TaskService
     public function getTasks(Request $request)
     {
         $date = isset($request->date) ? $request->date : now()->format('Y-m-d');
-
-        return $this->taskRepository->tasks($date);
+        $userId = auth()->user()->id;
+        return $this->taskRepository->tasks($userId, $date);
     }
 
     public function saveTask(array $payload, $userId)
@@ -87,7 +87,8 @@ class TaskService
 
     public function getTaskHistory()
     {
-        $tasks = $this->taskRepository->tasks();
+        $userId = auth()->user()->id;
+        $tasks = $this->taskRepository->tasks($userId);
 
         $grouped = [];
         $today = Carbon::today();

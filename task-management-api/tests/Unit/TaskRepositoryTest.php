@@ -41,7 +41,7 @@ class TaskRepositoryTest extends TestCase
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task 3', 'created_at' => $lastWeekDay->toDateString().' 00:00:00']);
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task 4', 'created_at' => $otherWeekDay->toDateString().' 00:00:00']);
 
-        $tasks = $this->tasRepository->tasks($date);
+        $tasks = $this->tasRepository->tasks($userId, $date);
         $this->assertCount(4, $tasks);
         foreach ($tasks as $key => $task) {
             $this->assertEquals($userId, $task->user_id);
@@ -69,7 +69,7 @@ class TaskRepositoryTest extends TestCase
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task 3', 'created_at' => $lastWeekDay->toDateString().' 00:00:00']);
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task 4', 'created_at' => $otherWeekDay->toDateString().' 00:00:00']);
 
-        $tasks = $this->tasRepository->tasks($date);
+        $tasks = $this->tasRepository->tasks($userId, $date);
         $this->assertCount(1, $tasks);
         foreach ($tasks as $key => $task) {
             $this->assertEquals($userId, $task->user_id);
@@ -148,7 +148,7 @@ class TaskRepositoryTest extends TestCase
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task 3']);
 
         $isDeleted = $this->tasRepository->destroy($task);
-        $tasks = $this->tasRepository->tasks();
+        $tasks = $this->tasRepository->tasks($userId);
 
         $this->assertCount(2, $tasks);
         $this->assertTrue($isDeleted);

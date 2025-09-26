@@ -23,14 +23,22 @@ class TaskServiceTest extends TestCase
         $date = '2025-09-24';
         $request = new Request(['date' => $date]);
 
+        $user = User::factory()->create([
+            'id' => 1,
+            'email' => 'alice@example.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        \Illuminate\Support\Facades\Auth::shouldReceive('user')->andReturn($user);
+
         $expectedTasks = new EloquentCollection([
            ['id' => 1, 'created_at' => $date],
            ['id' => 2, 'created_at' => $date],
         ]);
-
+        // dd($user);
         $mockRepository = Mockery::mock(TaskRepositoryInterface::class);
         $mockRepository->shouldReceive('tasks')
-            ->with($date)
+            ->with($user->id, $date)
             ->andReturn($expectedTasks);
 
         $mockDomain = Mockery::mock(TaskDomain::class);
@@ -53,9 +61,17 @@ class TaskServiceTest extends TestCase
             ['id' => 2, 'created_at' => $today],
         ]);
 
+        $user = User::factory()->create([
+            'id' => 1,
+            'email' => 'alice@example.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        \Illuminate\Support\Facades\Auth::shouldReceive('user')->andReturn($user);
+
         $mockRepository = Mockery::mock(TaskRepositoryInterface::class);
         $mockRepository->shouldReceive('tasks')
-            ->with($today)
+            ->with($user->id, $today)
             ->andReturn($expectedTasks);
 
         $mockDomain = Mockery::mock(TaskDomain::class);
@@ -274,6 +290,9 @@ class TaskServiceTest extends TestCase
             'password' => bcrypt('password123'),
         ]);
         $userId = $user->id;
+
+        $this->actingAs($user);
+        
         // Persist tasks in the DB
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task', 'created_at' => $today->toDateString().' 00:00:00']);
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task', 'created_at' => $yesterday->toDateString().' 00:00:00']);
@@ -281,7 +300,7 @@ class TaskServiceTest extends TestCase
         Task::factory()->create(['user_id' => $userId, 'task_description' => 'test task', 'created_at' => $otherWeekDay->toDateString().' 00:00:00']);
 
         $mockDomain = Mockery::mock(TaskDomain::class);
-        $mockDomain->shouldReceive('ordinal')->with(2)->andReturn('2nd');
+        $mockDomain->shouldReceive('ordinal')->with(3)->andReturn('2nd');
 
         $taskService = new TaskService(new TaskRepository(), $mockDomain);
 

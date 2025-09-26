@@ -5,10 +5,11 @@ namespace App\Http\Repositories;
 use App\Http\Repositories\Interfaces\TaskRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    public function tasks(?string $date = '') : EloquentCollection
+    public function tasks($user, ?string $date = '') : EloquentCollection
     {
         $query = Task::query();
 
@@ -16,7 +17,7 @@ class TaskRepository implements TaskRepositoryInterface
             $query->whereDate('created_at', $date);
         }
 
-        return $query->orderBy('created_at', 'DESC')->get();
+        return $query->where('user_id', $user)->orderBy('created_at', 'DESC')->get();
     }
 
     public function store(array $payload) : Task
