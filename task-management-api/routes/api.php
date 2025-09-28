@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('tasks')->controller(TaskController::class)->group(function () {
         Route::get('/sidebar-dates', 'storedTasks');
+        Route::post('/order', 'updateOrder');
     });    
     Route::resource('tasks', TaskController::class);
 

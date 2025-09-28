@@ -29,6 +29,8 @@ class TaskService
     public function saveTask(array $payload, $userId)
     {
         $payload['user_id'] = $userId;
+        $lastTask = Task::orderByDesc('order_id')->first();
+        $payload['order_id'] = $this->taskDomain->generateOrderId($lastTask);
         $task = $this->taskRepository->store($payload);
 
         if(!$task)
@@ -127,5 +129,24 @@ class TaskService
         }
 
         return array_values($grouped);
+    }
+
+    public function updateOrderTask(array $newTasks)
+    {
+        $isSave = $this->taskRepository->updateOrder($newTasks);
+
+        if(!$isSave){
+            return [
+                'message' => 'Unable to update task order',
+                'status' => 500,
+                'tasks' => $isSave,
+            ];
+        }
+        
+        return [
+            'message' => 'Task order updated successfully',
+            'status' => 200,
+            'tasks' => $isSave,
+        ];
     }
 }

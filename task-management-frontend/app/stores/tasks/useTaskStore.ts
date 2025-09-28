@@ -89,6 +89,27 @@ export const useTastStore = defineStore('task', {
             }
         },
 
+        async updateOrder(tasks : Task[]) {
+            const { $axios, $fetchCsrfCookie } = useNuxtApp()
+            const axios = $axios as AxiosInstance
+            const fetchCsrfCookie = $fetchCsrfCookie as () => Promise<void>
+    
+            this.isLoading = true
+            this.errors = null
+            try {
+                await fetchCsrfCookie()
+                await axios.post(`/api/tasks/order/`, { tasks })
+                await this.fetchTasks(this.date || undefined)
+            } catch (error : any) {
+            if(error.response && error.response.status === 500){
+                this.errors = error.response.data.errors
+            }
+    
+            } finally {
+                this.isLoading = false
+            }
+        },
+
         async deleteTask(id: number) {
             const { $axios, $fetchCsrfCookie } = useNuxtApp()
             const axios = $axios as AxiosInstance

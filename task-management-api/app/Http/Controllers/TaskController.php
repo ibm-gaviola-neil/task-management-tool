@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\ApiResponseResource;
 use App\Http\Services\TaskService;
 use App\Models\Task;
@@ -59,6 +58,18 @@ class TaskController extends Controller
         return (new ApiResponseResource($response))
             ->response()
             ->setStatusCode($response['status']);
+    }
+
+    /**
+     * Update the order of tasks.
+     */
+    public function updateOrder(Request $request)
+    {
+        $response = $this->taskService->updateOrderTask($request->all()['tasks']);
+        return (new ApiResponseResource($response))
+            ->response()
+            ->setStatusCode($response['status']);
+
     }
 
     /**

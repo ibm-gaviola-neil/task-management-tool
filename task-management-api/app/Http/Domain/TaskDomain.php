@@ -2,6 +2,8 @@
 
 namespace App\Http\Domain;
 
+use App\Models\Task;
+
 class TaskDomain {
     public function ordinal(int $number): string
     {
@@ -10,5 +12,17 @@ class TaskDomain {
             return $number . 'th';
         }
         return $number . $suffixes[$number % 10];
+    }
+
+    public function generateOrderId(?Task $task) : int
+    {
+        $taskLastOrderId = 0;
+
+        if(isset($task) && isset($task->order_id))
+        {
+            $taskLastOrderId = (int) $task->order_id;
+        }
+
+        return $taskLastOrderId + 1;
     }
 }
